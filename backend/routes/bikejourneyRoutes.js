@@ -5,8 +5,13 @@ const router = express.Router();
 // @route - /api/bikejourneys/
 router
   .route("/")
-  .get(bikejourneyControllers.getAllBikejourneys)
+  .get(bikejourneyControllers.paginateAllBikejourneys)
   .post(bikejourneyControllers.createNewBikejourney);
+
+//@route - /api/bikejourneys/filter
+router
+  .route("/filter")
+  .get(bikejourneyControllers.filterAllBikejourneys);
 
 // @route - /api/bikejourneys/id
 router

@@ -1,10 +1,11 @@
 const Bikejourney = require('../models/Bikejourney')
 const asyncHandler = require('../middleware/asyncHandler');
-const ErrorResponse = require('../utils/errorResponse')
+const ErrorResponse = require('../utils/errorResponse');
+const { isValidObjectId } = require('mongoose');
 
 
 
-exports.getAllBikejourneys = asyncHandler(async (req, res, next) => {
+exports.paginateAllBikejourneys = asyncHandler(async (req, res, next) => {
   //const bikejourneys = await Bikejourney.find();
 
   let query = Bikejourney.find();
@@ -34,6 +35,50 @@ exports.getAllBikejourneys = asyncHandler(async (req, res, next) => {
       pages,
       data: result
                                                                                   
+  })
+});
+
+exports.filterAllBikejourneys = asyncHandler(async (req, res, next) => {    //mongodb query language
+
+  let query;
+
+  const reqQuery = { ...req.query };
+
+  const removeFields = ["sort"];
+
+  //console.log(reqQuery);
+
+  removeFields.forEach(param => delete reqQuery[param]);           //[param or val] //delete key=value pair from an object
+
+  //console.log(reqQuery);
+
+  let queryStr = JSON.stringify(reqQuery);
+
+  //console.log(queryStr);
+
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
+
+  //console.log(queryStr);
+
+  query = Bikejourney.find(JSON.parse(queryStr));
+
+  if (req.query.sort) {
+    const sortByArr = req.query.sort.split(',');
+
+    const sortByStr = sortByArr.join(' ');
+
+    query = query.sort(sortByStr);
+  } else {
+    query = query.sort('-duration')
+  }
+
+  //                                          {"duration":{"$lte":"50"}}
+  //const bikejourneys = await Bikejourney.find(JSON.parse(queryStr));
+  const bikejourneys = await query;
+  
+  res.status(200).json({
+    status: 'success',
+    data: bikejourneys
   })
 });
 
