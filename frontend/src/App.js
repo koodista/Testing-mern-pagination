@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 
 import Card from "./components/Card";
 import Pagination from "./components/Pagination";
+import DataGridForBikeJourneys from './components/DataGrid/DataGrid';
 
 
 const  App = () => {  //{ match }
@@ -43,9 +44,9 @@ const  App = () => {  //{ match }
     return (
         <div className="app">
 
-          
+          <DataGridForBikeJourneys />
 
-          {loading ? (
+          {/* {loading ? (
             <h3 className="loading-text">Loading...</h3>
           ) : error ? (
             <h3 className="error-text">{error}</h3>
@@ -59,8 +60,8 @@ const  App = () => {  //{ match }
               </div>
               <Pagination page={page} pages={pages} changePage={setPage} />
         </>
-      )}
-    </div>
+      )}*/}
+    </div> 
   );
    
           
